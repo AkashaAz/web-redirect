@@ -1,14 +1,18 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders, HttpBackend } from "@angular/common/http";
-
+@Injectable({
+  providedIn: "root",
+})
 export class ApiService {
-  httpClient;
-  constructor(private http: HttpClient, httpBackend: HttpBackend) {
-    this.httpClient = new HttpClient(httpBackend);
-  }
+  constructor(private http: HttpClient) {}
 
-  public getJwks() {
+  public getOidc() {
     return this.http.get("https://mfaf-party-stg.adldigitalservice.com/oidc/.well-known/openid-configuration", {
+      headers: {},
+    });
+  }
+  public getJwks(url: any) {
+    return this.http.get(url, {
       headers: {},
     });
   }

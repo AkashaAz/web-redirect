@@ -40,8 +40,11 @@ export class AppComponent {
     return data;
   }
   private getJwks() {
-    this.apiService.getJwks().subscribe(async (res: any) => {
-      console.log(res);
+    this.apiService.getOidc().subscribe(async (res: any) => {
+      console.log(res.jwks_uri);
+      this.apiService.getJwks(res.jwks_uri).subscribe(async (result: any) => {
+        console.log(result);
+      });
     });
   }
 }
