@@ -1,4 +1,6 @@
 import { Component } from "@angular/core";
+import { MiddlewareConfigService } from "./services/common/configMiddleware";
+import { Ga4Service } from "./services/common/config-GA4.service";
 
 @Component({
   selector: "app-root",
@@ -7,12 +9,16 @@ import { Component } from "@angular/core";
 })
 export class AppComponent {
   title = "web-redirect";
+  constructor(private middlewareConfigService: MiddlewareConfigService, private ga4Service: Ga4Service) {}
   ngOnInit(): void {
+    console.log(this.ga4Service.checkEnvConfig("insurance"));
+    (window as any).checkConfigMiddleware = this.checkConfigMiddleware.bind(this);
     (window as any).handleCommunication = this.handleCommunication.bind(this);
   }
   redirect() {
     window.location.replace("https://auto-schema.web.app/callback");
   }
+  async checkConfigMiddleware() {}
   async handleCommunication(data: any) {
     //add header
     data.headers.headers.set("cache-Control", ["no-cache"]);
