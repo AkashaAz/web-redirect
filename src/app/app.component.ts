@@ -15,7 +15,8 @@ export class AppComponent {
   constructor(private middlewareConfigService: MiddlewareConfigService, private ga4Service: Ga4Service, private apiService: ApiService) {}
   checkTokenMfaf: any;
   ngOnInit(): void {
-    console.log(this.getJwks());
+    this.getJwks()
+    console.log(this.checkTokenMfaf);
     console.log(this.ga4Service.checkEnvConfig("insurance"));
     (window as any).checkConfigMiddleware = this.checkConfigMiddleware.bind(this);
     (window as any).handleCommunication = this.handleCommunication.bind(this);
@@ -67,7 +68,7 @@ export class AppComponent {
               const verify = await jose
                 .jwtVerify(decoded.login_token, JWKS, {
                   issuer: loginToken.iss,
-                  audience: "loginToken.aud",
+                  audience: loginToken.aud,
                 })
                 .then(
                   (res) => {
@@ -82,11 +83,10 @@ export class AppComponent {
               this.checkTokenMfaf = verify;
             });
         });
-      console.log("try", this.checkTokenMfaf);
     } catch (error) {
       console.log(error);
+      this.checkTokenMfaf = false
       console.log("catch");
     }
-    console.log(this.checkTokenMfaf);
   }
 }
