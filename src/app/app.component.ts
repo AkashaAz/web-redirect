@@ -4,6 +4,7 @@ import { Ga4Service } from "./services/common/config-GA4.service";
 import { ApiService } from "./services/api";
 import * as jose from "jose";
 import jwt_decode from "jwt-decode";
+// import { JwtService } from "./services/common/jwt-services";
 
 @Component({
   selector: "app-root",
@@ -12,11 +13,17 @@ import jwt_decode from "jwt-decode";
 })
 export class AppComponent {
   title = "web-redirect";
-  constructor(private middlewareConfigService: MiddlewareConfigService, private ga4Service: Ga4Service, private apiService: ApiService) {}
+  constructor(
+    private middlewareConfigService: MiddlewareConfigService,
+    private ga4Service: Ga4Service,
+    private apiService: ApiService // private jwtService: JwtService
+  ) {}
   checkTokenMfaf: any;
   ngOnInit(): void {
-    this.getJwks()
-    console.log(this.checkTokenMfaf);
+    // let checkToken = this.getJwks();
+    const payload = { id: 1, username: "example" };
+    const token = this.generateToken(payload);
+    console.log(token);
     console.log(this.ga4Service.checkEnvConfig("insurance"));
     (window as any).checkConfigMiddleware = this.checkConfigMiddleware.bind(this);
     (window as any).handleCommunication = this.handleCommunication.bind(this);
@@ -24,6 +31,12 @@ export class AppComponent {
   redirect() {
     window.location.replace("https://auto-schema.web.app/callback");
   }
+  generateToken(payload: any): string {
+    const header = btoa(JSON.stringify({ alg: "none", typ: "JWT" }));
+    const encodedPayload = btoa(JSON.stringify(payload));
+    return `${header}.${encodedPayload}.`;
+  }
+
   async checkConfigMiddleware() {}
   async handleCommunication(data: any) {
     //add header
@@ -85,8 +98,9 @@ export class AppComponent {
         });
     } catch (error) {
       console.log(error);
-      this.checkTokenMfaf = false
+      this.checkTokenMfaf = false;
       console.log("catch");
     }
+    console.log(this.checkTokenMfaf);
   }
 }
