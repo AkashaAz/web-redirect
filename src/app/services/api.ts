@@ -7,7 +7,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   public getOidc() {
-    return this.http.get("https://mfaf-party-stg.adldigitalservice.com/oidc/.well-known/openid-configuration", {
+    return this.http.get("https://mfaf-party-dev.adldigitalservice.com/oidc/.well-known/openid-configuration", {
       headers: {},
     });
   }

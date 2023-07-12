@@ -16,7 +16,26 @@ export class AnonymousAuthGuard implements CanLoad {
   checkTokenMfaf: any;
   canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
     console.log(route);
+
     return new Promise(async (resolve) => {
+      //   localStorage.getItem("Platform");
+      //   // const verify = await jose
+      //   //               .jwtVerify(decoded.login_token, JWKS, {
+      //   //                 issuer: loginToken.iss,
+      //   //                 audience: loginToken.aud,
+      //   //               })
+      //   console.log(localStorage.getItem("Platform"));
+      //   const jwtKey = "SGL_SECRET_R4ND0M_!@#$%^&*_CUR";
+      //   const decodedToken = jwt_decode(localStorage.getItem("Platform") as any);
+      //   console.log(this.jwtService.decodeJwtToken(decodedToken, jwtKey));
+      //   console.log(decodedToken);
+      //   let url =
+      //     "https://stg-digital.ais.th/digitalco/api/v3/digitalco/product-management/marketplace/products?merchantId=nqUDJC2y2fI&isProductHighlight=true&sortBy=sortProductHighlight";
+      //   url = url.replace("https://stg-digital.ais.th", "https://api-dev.adldigitalservice.com/");
+      //   console.log(url);
+      if (localStorage.getItem("testtsad")) {
+        console.log("yetstd");
+      }
       await this.apiService
         .testAPi()
         .toPromise()
@@ -49,6 +68,7 @@ export class AnonymousAuthGuard implements CanLoad {
                   aud: string;
                 }
                 let loginToken: loginToken = jwt_decode(decoded.login_token);
+                console.log(loginToken);
                 const verify = await jose
                   .jwtVerify(decoded.login_token, JWKS, {
                     issuer: loginToken.iss,
@@ -99,6 +119,11 @@ export class AnonymousAuthGuard implements CanLoad {
             typ: "JWT", // Token type
           };
           const jwtKey = "SGL_SECRET_R4ND0M_!@#$%^&*_CUR";
+          const payloadPlatform = {
+            platform: "mfaf",
+            datetime: new Date(),
+          };
+          localStorage.setItem("Platform", `${this.jwtService.generateJWT(header, payloadPlatform, jwtKey)}`);
           localStorage.setItem("X-Digitalco-Id", `${this.jwtService.generateJWT(header, data, jwtKey)}`);
           const accessToken = localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken");
           localStorage.setItem("Authorization", `Bearer ${accessToken}`);

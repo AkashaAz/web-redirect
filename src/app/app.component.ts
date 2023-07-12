@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, HostListener } from "@angular/core";
 import { MiddlewareConfigService } from "./services/common/configMiddleware";
 import { Ga4Service } from "./services/common/config-GA4.service";
 import { ApiService } from "./services/api";
@@ -18,8 +18,31 @@ export class AppComponent {
     private ga4Service: Ga4Service,
     private apiService: ApiService // private jwtService: JwtService
   ) {}
+  @HostListener("window:scroll", ["$event"])
+  @HostListener("touchmove", ["$event"])
+  handleTouch(event) {
+    let touch = event.touches[0] || event.changedTouches[0];
+    // console.log(touch.pageY);
+    this.scroll = touch.pageY;
+  }
+  scroll = 0;
+  // onScrollEvent($event) {
+  //   // console.log($event);
+  //   let element = document.getElementById("scroll");
+  //   if (element) {
+  //     console.log(element.scrollHeight);
+  //     console.log(element.clientHeight);
+  //   }
+  //   this.scroll = window.scrollY;
+  //   // console.log(window.scrollY);
+  // }
+  ngAfterViewChecked() {
+    console.log(this.scroll);
+  }
+
   checkTokenMfaf: any;
   ngOnInit(): void {
+    console.log(document.documentElement.clientHeight);
     // let checkToken = this.getJwks();
     const payload = { id: 1, username: "example" };
     const token = this.generateToken(payload);
@@ -56,6 +79,18 @@ export class AppComponent {
     console.log(data);
     return data;
   }
+  // getScroll() {
+  //   this.scrollY = window.scrollY;
+  // }
+  // onScroll(event) {
+  //   this.scrollY = window.scrollY;
+  //   console.log(this.scrollY);
+  // }
+  // onScroll(event) {
+  //   console.log(event);
+  //   this.scrollY = window.scrollY;
+  //   console.log(this.scrollY);
+  // }
   private async getJwks() {
     try {
       await this.apiService
